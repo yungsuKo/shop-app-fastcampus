@@ -49,12 +49,12 @@ const googleStrategyConfig = new GoogleStrategy(
     console.log(profile);
     const user = await User.findOne({ googleId: profile.id });
     console.log('user :', user);
-    return done(null, user);
     if (user) {
     } else {
       const user = new User();
       user.email = profile.emails[0].value;
       user.googleId = profile.id;
+      user.username = profile.displayName;
       user.save();
       if (user) {
         done(null, user);

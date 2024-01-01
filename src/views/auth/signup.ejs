@@ -1,5 +1,6 @@
+<%- include('../partials/header') %>
 <div class='auth-wrapper'>
-  <form method='post' action='/auth/login'>
+  <form method='post' action='/auth/signup'>
     <div class='text-center'>
       <h3 class='mb-3 font-weight-normal'></h3>
     </div>
@@ -17,7 +18,7 @@
     </div>
     <div class='d-flex justify-content-between align-items-center'>
       <div>
-        <button type='submit' class='btn btn-primary'>로그인</button>
+        <button type='submit' class='btn btn-primary'>회원가입</button>
       </div>
       <div>
         <a href='/auth/google' class='btn btn-danger' role='button'>구글</a>
@@ -29,3 +30,4 @@
     </div>
   </form>
 </div>
+<%- include('../partials/footer') %>

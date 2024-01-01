@@ -69,17 +69,6 @@ app.use('/admin/products', adminProductsRouter);
 app.use('/products', productsRouter);
 app.use('/cart', cartRouter);
 
-app.post('/signup', async (req, res, next) => {
-  // user 객체를 생성함
-  const user = new User(req.body);
-  try {
-    // user 컬렉션에 유저를 저장
-    await user.save();
-    res.redirect('/login');
-  } catch (err) {
-    console.log(err);
-  }
-});
 app.post('/logout', (req, res) => {
   req.logOut(function (err) {
     if (err) return next(err);
