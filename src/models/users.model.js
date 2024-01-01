@@ -15,6 +15,16 @@ const userSchema = mongoose.Schema({
     unique: true,
     sparse: true, // null 값 unique 에러 방지
   },
+  username: {
+    type: String,
+    require: true,
+    trim: true
+  },
+  admin: {
+    type: Number,
+    // 0번은 일반 유저, 1번은 관리자 유저
+    default: 0,
+  }
 });
 
 const rounds = 5;
