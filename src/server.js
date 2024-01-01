@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const PORT = 4000;
+const PORT = 3000;
 const path = require('path');
 const { default: mongoose } = require('mongoose');
 const bodyParser = require('body-parser');
@@ -12,6 +12,13 @@ const {
   checkNotAuthenticated,
 } = require('./middlewares/auth');
 require('dotenv').config();
+
+const mainRouter = require('./routes/main.router');
+const usersRouter = require('./routes/users.router');
+const productsRouter = require('./routes/products.router');
+const cartRouter = require('./routes/cart.router');
+const adminCategoriesRouter = require('./routes/admin-categories.router');
+const adminProductsRouter = require('./routes/admin-products.router');
 
 app.use(
   cookieSession({
@@ -41,7 +48,7 @@ require('./config/passport');
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use('/static', express.static(path.join(__dirname, 'public')));
+app.use( express.static(path.join(__dirname, 'public')));
 // view engine setup
 app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'ejs');
@@ -55,40 +62,13 @@ mongoose
     console.log(err);
   });
 
-app.get('/', checkAuthenticated, (req, res) => {
-  console.log(req.user);
-  res.render('index');
-});
-app.get('/login', checkNotAuthenticated, (req, res) => {
-  res.render('login');
-});
-app.post('/login', (req, res, next) => {
-  passport.authenticate('local', (err, user, info) => {
-    if (err) {
-      return next(err);
-    }
-    if (!user) {
-      return res.json({ msg: info });
-    }
-    req.logIn(user, function (err) {
-      if (err) return next(err);
-      res.redirect('/');
-    });
-  })(req, res, next);
-});
+app.use('/', mainRouter);
+app.use('/auth', usersRouter);
+app.use('/admin/categories', adminCategoriesRouter);
+app.use('/admin/products', adminProductsRouter);
+app.use('/products', productsRouter);
+app.use('/cart', cartRouter);
 
-app.get('/auth/google', passport.authenticate('google'), () => {});
-app.get(
-  '/auth/google/callback',
-  passport.authenticate('google', {
-    successReturnToOrRedirect: '/',
-    failureRedirect: '/login',
-  })
-);
-
-app.get('/signup', checkNotAuthenticated, (req, res) => {
-  res.render('signup');
-});
 app.post('/signup', async (req, res, next) => {
   // user 객체를 생성함
   const user = new User(req.body);
