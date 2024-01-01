@@ -12,6 +12,7 @@ const {
   checkNotAuthenticated,
 } = require('./middlewares/auth');
 require('dotenv').config();
+const flash = require('connect-flash');
 
 const mainRouter = require('./routes/main.router');
 const usersRouter = require('./routes/users.router');
@@ -52,6 +53,7 @@ app.use( express.static(path.join(__dirname, 'public')));
 // view engine setup
 app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'ejs');
+app.use(flash());
 
 mongoose
   .connect(`${process.env.MONGO_URL}`)
@@ -62,6 +64,13 @@ mongoose
     console.log(err);
   });
 
+app.use((req, res, next) => {
+  res.locals.error = req.flash('error');
+  res.locals.success = req.flash('success');
+  res.locals.currentUser = req.user;
+  console.log(req.user);
+  next();
+})
 app.use('/', mainRouter);
 app.use('/auth', usersRouter);
 app.use('/admin/categories', adminCategoriesRouter);
