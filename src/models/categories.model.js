@@ -1,4 +1,4 @@
-const {default: mongoose} = required('mongoose');
+const {default: mongoose} = require('mongoose');
 
 const categorySchema = mongoose.Schema({
     title : {
@@ -10,3 +10,6 @@ const categorySchema = mongoose.Schema({
         required: true
     }
 })
+
+const Category = mongoose.model('Category', categorySchema);
+module.exports = Category;
