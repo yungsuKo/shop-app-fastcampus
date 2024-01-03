@@ -4,7 +4,16 @@ const Category = require('../models/categories.model');
 const router = express.Router();
 
 router.get('/', checkAdmin, async(req, res) => {
-    res.render('admin/categories');
+    try{
+        const categories = await Category.find();
+        res.render('admin/categories', {
+            categories: categories
+        });
+    }catch(error){
+        console.log(error);
+        next(error);
+    }
+    
 })
 
 router.get('/add-category', checkAdmin, async(req, res) => {
@@ -33,6 +42,18 @@ router.post('/add-category', checkAdmin, async(req, res) => {
         console.log(err);
         next(err);
     }
+})
+
+router.get('/delete-category/:id', async(req, res) => {
+    try{
+        await Category.findByIdAndDelete(req.params.id);
+        req.flash('success', '삭제가 완료되었습니다.');
+        res.redirect('back');
+    }catch(error){
+        console.log(error);
+        next(error);
+    }
+    
 })
 
 module.exports = router;

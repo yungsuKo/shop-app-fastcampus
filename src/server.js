@@ -80,7 +80,7 @@ app.use('/cart', cartRouter);
 
 app.use((err, req, res, next) => {
   res.status(err.status || 500);
-  res.send(err.message || '에러가 낫습니다.');
+  res.send(err.message || '에러가 났습니다.');
 })
 
 app.post('/logout', (req, res) => {
