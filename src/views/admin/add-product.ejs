@@ -36,4 +36,15 @@
     <button type='submit' class='btn btn-primary'>생성하기</button>
 </form>
 
+<script>
+    function readFile(inputEl){
+        if(inputEl.files && inputEl.files[0]){
+            console.log(inputEl.files[0]);
+        }
+    }
+    document.querySelector('#img').addEventListener('change', function(){
+      readFile(this);
+    })
+</script>
+
 <%- include('../partials/footer') %>
