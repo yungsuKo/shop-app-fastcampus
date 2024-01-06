@@ -5,6 +5,18 @@ const Product = require('../models/products.model');
 const router = express.Router();
 const fs = require('fs-extra');
 
+router.get('/', checkAdmin, async(req, res, next) => {
+    try{
+        const products = await Product.find();
+        res.render('admin/products', {
+            products: products
+        })
+    }catch(err){
+        console.log(err);
+        next(err);
+    }
+})
+
 router.get('/add-product', checkAdmin,async(req, res) => {
     try{
         const categories = await Category.find();
