@@ -64,4 +64,18 @@ router.post('/', checkAdmin, async (req, res, next) => {
     }
 })
 
+router.delete('/:id', checkAdmin, async(req, res, next) => {
+    const id = req.params.id;
+    const path = 'src/public/product-images' + id;
+    try{
+        await fs.remove(path);
+        await Product.findByIdAndRemove(id);
+        req.flash('success', '성공적으로 삭제가 되었습니다.');
+        res.redirect('back');
+    }catch(err){
+        console.log(err);
+        next(err);
+    }
+});
+
 module.exports = router;

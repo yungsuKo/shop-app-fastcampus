@@ -3,17 +3,12 @@ const app = express();
 const PORT = 3000;
 const path = require('path');
 const { default: mongoose } = require('mongoose');
-const bodyParser = require('body-parser');
-const User = require('./models/users.model');
 const passport = require('passport');
 const cookieSession = require('cookie-session');
-const {
-  checkAuthenticated,
-  checkNotAuthenticated,
-} = require('./middlewares/auth');
 require('dotenv').config();
 const flash = require('connect-flash');
 const fileupload = require('express-fileupload');
+const methodOverride = require('method-override');
 
 const mainRouter = require('./routes/main.router');
 const usersRouter = require('./routes/users.router');
@@ -47,7 +42,7 @@ app.use(function (request, response, next) {
 });
 require('./config/passport');
 app.use(fileupload());
-
+app.use(methodOverride('_method'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
