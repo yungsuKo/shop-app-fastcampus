@@ -13,6 +13,7 @@ const {
 } = require('./middlewares/auth');
 require('dotenv').config();
 const flash = require('connect-flash');
+const fileupload = require('express-fileupload');
 
 const mainRouter = require('./routes/main.router');
 const usersRouter = require('./routes/users.router');
@@ -45,6 +46,7 @@ app.use(function (request, response, next) {
   next();
 });
 require('./config/passport');
+app.use(fileupload());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
