@@ -120,6 +120,23 @@ router.post('/product-gallery/:id', checkAdmin, async(req, res, next) => {
     }
 })
 
+router.delete('/:id/image/:img', checkAdmin, async (req, res, next) => {
+    const imageFile = req.params.img;
+    const originImage = 'src/public/product-images/' + req.params.id + '/gallery/' + imageFile;
+    const thumbImage = 'src/public/product-images/' + req.params.id + '/gallery/thumbs/' + imageFile;
+
+    try{
+        await fs.remove(originImage);
+        await fs.remove(thumbImage);
+
+        req.flash('success', '삭제가 완료되었습니다.');
+        res.redirect('back');
+    }catch(err){
+        console.log(err);
+        next(err);
+    }
+})
+
 // router.put('/:id', checkAdmin, async(req, res) => {
 //     try{
 //         await Product.findByIdAndUpdate(req.params.id, req.body);

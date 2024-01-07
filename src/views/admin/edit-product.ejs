@@ -11,7 +11,7 @@
     <% galleryImages.forEach((galleryImage) => { %>
         <% if (galleryImage!== 'thumbs') { %>
             <div class='col'>
-                <form action="/admin/products/<%= id %>/image/<%= image %>?_method=delete" method='post'>
+                <form action="/admin/products/<%= id %>/image/<%= galleryImage %>?_method=delete" method='post'>
                     <button type='submit'><img src='/product-images/<%= id %>/gallery/thumbs/<%= galleryImage %>'></button>
                 </form>
             </div>
