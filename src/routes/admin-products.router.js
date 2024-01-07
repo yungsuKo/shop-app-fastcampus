@@ -4,6 +4,7 @@ const Category = require('../models/categories.model');
 const Product = require('../models/products.model');
 const router = express.Router();
 const fs = require('fs-extra');
+const ResizeImg = require('resize-img');
 
 router.get('/', checkAdmin, async(req, res, next) => {
     try{
@@ -17,7 +18,7 @@ router.get('/', checkAdmin, async(req, res, next) => {
     }
 })
 
-router.get('/add-product', checkAdmin,async(req, res) => {
+router.get('/add-product', checkAdmin,async(req, res, next) => {
     try{
         const categories = await Category.find();
         res.render('admin/add-product', {
@@ -77,5 +78,54 @@ router.delete('/:id', checkAdmin, async(req, res, next) => {
         next(err);
     }
 });
+
+router.get('/:id/edit', checkAdmin, async (req, res, next) => {
+    try{
+        const {_id, title, desc, category, price, image} = await Product.findById(req.params.id);
+        const categories = await Category.find();
+        const galleryDir = 'src/public/product-images/'+_id+'/gallery';
+        const galleryImages = await fs.readdir(galleryDir);
+
+        res.render('admin/edit-product', {
+            title: title,
+            desc: desc,
+            categoryS: category.replace(/\s+/g, '-').toLowerCase(),
+            price: price,
+            image: image,
+            galleryImages: galleryImages,
+            id: _id,
+            categories: categories
+        });
+    }catch(err){
+        console.log(err);
+        next(err);
+    }
+})
+
+router.post('/product-gallery/:id', checkAdmin, async(req, res, next) => {
+    const imageFile = req.files.file.name;
+    const productImage = req.files.file;
+    const path = 'src/public/product-images/' + req.params.id + '/gallery/' + imageFile;
+    const thumbPath = 'src/public/product-images/' + req.params.id + '/gallery/thumbs/' + imageFile;
+    try{
+        await productImage.mv(path);
+        const buf = await ResizeImg(fs.readFileSync(path), {width: 100, height: 100});
+        fs.writeFileSync(thumbPath, buf);
+        res.sendStatus(200);
+    }catch(err){
+        console.log(err);
+        next(err);
+    }
+})
+
+router.put('/:id', checkAdmin, async(req, res) => {
+    try{
+        await Product.findByIdAndUpdate(req.params.id, req.body);
+        req.flash('success', '수정이 정상적으로 되었습니다.');
+    }catch(err){
+        console.log(err);
+        next(err);
+    }
+})
 
 module.exports = router;
