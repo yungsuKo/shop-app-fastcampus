@@ -108,7 +108,9 @@ router.post('/product-gallery/:id', checkAdmin, async(req, res, next) => {
     const path = 'src/public/product-images/' + req.params.id + '/gallery/' + imageFile;
     const thumbPath = 'src/public/product-images/' + req.params.id + '/gallery/thumbs/' + imageFile;
     try{
+        // 원본이미지를 gallery에 넣어주기
         await productImage.mv(path);
+        // 이미지를 리사이즈
         const buf = await ResizeImg(fs.readFileSync(path), {width: 100, height: 100});
         fs.writeFileSync(thumbPath, buf);
         res.sendStatus(200);
@@ -118,14 +120,14 @@ router.post('/product-gallery/:id', checkAdmin, async(req, res, next) => {
     }
 })
 
-router.put('/:id', checkAdmin, async(req, res) => {
-    try{
-        await Product.findByIdAndUpdate(req.params.id, req.body);
-        req.flash('success', '수정이 정상적으로 되었습니다.');
-    }catch(err){
-        console.log(err);
-        next(err);
-    }
-})
+// router.put('/:id', checkAdmin, async(req, res) => {
+//     try{
+//         await Product.findByIdAndUpdate(req.params.id, req.body);
+//         req.flash('success', '수정이 정상적으로 되었습니다.');
+//     }catch(err){
+//         console.log(err);
+//         next(err);
+//     }
+// })
 
 module.exports = router;
