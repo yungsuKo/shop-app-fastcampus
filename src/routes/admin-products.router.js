@@ -34,13 +34,16 @@ router.post('/', checkAdmin, async (req, res, next) => {
     // const imageFile = typeof req.files?.image !== "undefined" ? req.files.image.name : "";
     const imageFile = req.files.image.name;
     const {title, desc, price, category} = req.body;
-    const slug = title.replace(/\s+/g, '-').toLowerCase();
+    const titleSlug = title.replace(/\s+/g, '-').toLowerCase();
+    const categorySlug = category.replace(/\s+/g, '-').toLowerCase();
 
     try{
         // 데이터 저장해주기
         const newProduct = new Product({
-            title, desc, price, category,
+            title, desc, price, 
+            category: categorySlug,
             image: imageFile,
+            slug: titleSlug
         })
         await newProduct.save();
 
