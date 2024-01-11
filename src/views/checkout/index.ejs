@@ -33,7 +33,18 @@
             <% }) %>
             <tr>
                 <td colspan='5'></td>
-                <td><%= total %></td>
+                <td><%= total %>원</td>
+            </tr>
+            <tr>
+                <td colspan='4'></td>
+                <td>
+                    <form action='/cart?_method=delete' method='post'>
+                        <button class='clearcart btn btn-danger'>장바구니 비우기</button>
+                    </form>
+                </td>
+                <td>
+                    <a class='btn btn-primary buyout'>결제하기</a>
+                </td>
             </tr>
         </tbody>
     </table>
