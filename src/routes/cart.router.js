@@ -2,18 +2,21 @@ const express = require('express');
 const Product = require('../models/products.model');
 const router = express.Router();
 
+router.get('/checkout', async (req, res, next) => {
+    res.render('checkout');
+})
+
 router.post('/:productId', async(req, res, next) => {
     const slug = req.params.productId;
     try{
         const product = await Product.find({slug: slug});
-
         if(!req.session.cart){
             req.session.cart = [];
             req.session.cart.push({
                 title: slug,
                 qty : 1,
-                price : product.price,
-                image : '/product-images/' + product._id+'/'+product.image
+                price : product[0].price,
+                image : '/product-images/' + product[0]._id+'/'+product[0].image
             })
         }else {
             let cart= req.session.cart;
@@ -21,6 +24,7 @@ router.post('/:productId', async(req, res, next) => {
 
             // 만약 이미 카트에 있는 상품이라면 한 개 추가하고 loop break
             for(let i = 0; i< cart.length; i++){
+                console.log(cart);
                 if(cart[i].title === slug){
                     cart[i].qty++;
                     newItem = false;
@@ -32,8 +36,8 @@ router.post('/:productId', async(req, res, next) => {
                 cart.push({
                     title: slug,
                     qty : 1,
-                    price : product.price,
-                    image : '/product-images/' + product._id+'/'+product.image
+                    price : product[0].price,
+                    image : '/product-images/' + product[0]._id+'/'+product[0].image
                 })
             }
         }
