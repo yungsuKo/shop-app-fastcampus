@@ -4,6 +4,7 @@ const PORT = 3000;
 const path = require('path');
 const { default: mongoose } = require('mongoose');
 const passport = require('passport');
+// const session = require('express-session');
 const cookieSession = require('cookie-session');
 require('dotenv').config();
 const flash = require('connect-flash');
@@ -17,14 +18,28 @@ const cartRouter = require('./routes/cart.router');
 const adminCategoriesRouter = require('./routes/admin-categories.router');
 const adminProductsRouter = require('./routes/admin-products.router');
 
+
+// app.use(session({
+//   secret : process.env.COOKIE_KEY,
+//   cookie: {
+//     httpOnly: true,
+//     secure: false,
+//   },
+//   name: 'shop-app-cookie',
+//   resave: false,
+//   saveUninitialized: false,
+// }))
+
 app.use(
   cookieSession({
     name: 'cookie-session-name',
     keys: [process.env.COOKIE_KEY],
   })
 );
+
 app.use(passport.initialize());
 app.use(passport.session());
+
 app.use(function (request, response, next) {
   if (request.session && !request.session.regenerate) {
     request.session.regenerate = (cb) => {
@@ -40,6 +55,7 @@ app.use(function (request, response, next) {
 
   next();
 });
+
 require('./config/passport');
 app.use(fileupload());
 app.use(methodOverride('_method'));
