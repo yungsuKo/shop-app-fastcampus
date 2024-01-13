@@ -87,4 +87,9 @@ router.delete('/', async (req, res, next) => {
     res.redirect('back');
 })
 
+router.get('/complete-order', async (req, res, next) => {
+    delete req.session.cart;
+    res.sendStatus(200);
+})
+
 module.exports = router;
